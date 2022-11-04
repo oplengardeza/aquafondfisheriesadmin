@@ -129,6 +129,7 @@ export default function Users() {
       setData(data);
       setIsLoading(false)
     });
+    setIsLoading(false);
     return unsubscribe;
   }, [navigate]);
 

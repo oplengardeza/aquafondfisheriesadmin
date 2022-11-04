@@ -131,6 +131,7 @@ export default function Shops() {
       setShopData(data);
       setIsLoading(false);
     });
+    setIsLoading(false);
     return unsubscribe;
   }, [navigate])
 
