@@ -4,12 +4,12 @@ import { getStorage } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAXMcdp8D3sUFoxJdlsbYWvvABO0GMFv4I",
-  authDomain: "aquafondfisheriesfinal.firebaseapp.com",
-  projectId: "aquafondfisheriesfinal",
-  storageBucket: "aquafondfisheriesfinal.appspot.com",
-  messagingSenderId: "1085690628499",
-  appId: "1:1085690628499:web:8eaaeb448efcdfacfa0066"
+  apiKey: "AIzaSyB_EVz1vpdcFkUXrsZth6IejQ7J-4j2vhI",
+  authDomain: "aquafongfisheries.firebaseapp.com",
+  projectId: "aquafongfisheries",
+  storageBucket: "aquafongfisheries.appspot.com",
+  messagingSenderId: "479940922928",
+  appId: "1:479940922928:web:155ed9c494315e7583e7f5"
 };
 
 const app = initializeApp(firebaseConfig);
