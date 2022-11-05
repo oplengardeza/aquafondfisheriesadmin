@@ -137,13 +137,21 @@ export default function Shops() {
 
   const handleVerify = async (ownerID, shopID) => {
     const shopQuery = doc(db, "users", ownerID, "shop", shopID);
+    const shopsQuery = doc(db, "shops", shopID);
     await setDoc(shopQuery, {
       isShopVerified: true
     }, { merge: true }
     ).then(async () => {
       const shopsQuery = doc(db, "shops", shopID);
       await setDoc(shopsQuery, {
-        isShopVerified: true
+        isShopVerified: true,
+        status: "Verified"
+      }, { merge: true }
+      )
+    }).then(() => {
+      setDoc(shopsQuery, {
+        isShopVerified: false,
+        status: "Rejected"
       }, { merge: true }
       )
     })
@@ -151,17 +159,26 @@ export default function Shops() {
 
   const handleReject = async (ownerID, shopID) => {
     const shopQuery = doc(db, "users", ownerID, "shop", shopID);
+    const shopsQuery = doc(db, "shops", shopID);
     await setDoc(shopQuery, {
-      isShopVerified: false
+      isShopVerified: false,
+      status: "Rejected"
     }, { merge: true }
-    )
+    ).then(() => {
+      setDoc(shopsQuery, {
+        isShopVerified: false,
+        status: "Rejected"
+      }, { merge: true }
+      )
+    })
+
   }
 
   const handleView = (ownerID, shopID) => {
     setIsClicked(true)
     const shopQuery = doc(db, "users", ownerID, "shop", shopID);
     onSnapshot(shopQuery, (doc) => {
-      setSelectedData({ id: shopID, data: doc.data()});
+      setSelectedData({ id: shopID, data: doc.data() });
     })
     setShopIDSET(shopID)
     setOwnerIDSET(ownerID)
@@ -190,7 +207,7 @@ export default function Shops() {
         : <>
           {isClicked === true ?
             <Box sx={{ minHeight: "85vh", boxShadow: 2, border: 2 }}>
-              <ShopSingleView data={selectedData} shopID={shopIDSET} ownerID={ownerIDSET}/>
+              <ShopSingleView data={selectedData} shopID={shopIDSET} ownerID={ownerIDSET} />
             </Box>
             : <>
               <TableContainer
@@ -282,7 +299,7 @@ export default function Shops() {
                               <>
                                 <Button variant='contained' color="info" onClick={() => handleView(data.userID, id)} sx={{ width: 100, fontWeight: 'bold' }}>View</Button>
                                 <Button variant='contained' color="success" onClick={() => handleVerify(data.userID, id)} sx={{ marginLeft: 1, width: 100, fontWeight: 'bold' }}>Verify</Button>
-                                <Button variant='contained' color="error" disabled  onClick={() => handleReject(data.userID, id)} sx={{ marginLeft: 1, width: 100, fontWeight: 'bold' }}>Reject</Button>
+                                <Button variant='contained' color="error" disabled onClick={() => handleReject(data.userID, id)} sx={{ marginLeft: 1, width: 100, fontWeight: 'bold' }}>Reject</Button>
                               </>
                             }
                           </Box>
