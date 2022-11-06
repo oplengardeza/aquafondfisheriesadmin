@@ -137,41 +137,44 @@ export default function Shops() {
 
   const handleVerify = async (ownerID, shopID) => {
     const shopQuery = doc(db, "users", ownerID, "shop", shopID);
-    const shopsQuery = doc(db, "shops", shopID);
+    const notifQuery = doc(db, "notifications", shopID);
     await setDoc(shopQuery, {
-      isShopVerified: true
+      isShopVerified: true,
+      status: "verified"
     }, { merge: true }
     ).then(async () => {
       const shopsQuery = doc(db, "shops", shopID);
       await setDoc(shopsQuery, {
         isShopVerified: true,
-        status: "Verified"
+        status: "verified"
       }, { merge: true }
-      )
-    }).then(() => {
-      setDoc(shopsQuery, {
-        isShopVerified: false,
-        status: "Rejected"
-      }, { merge: true }
-      )
+      ).then(async () => {
+        await setDoc(notifQuery, {
+          status: "verified"
+        }, { merge: true })
+      })
     })
   }
 
   const handleReject = async (ownerID, shopID) => {
     const shopQuery = doc(db, "users", ownerID, "shop", shopID);
     const shopsQuery = doc(db, "shops", shopID);
+    const notifQuery = doc(db, "notifications", shopID);
     await setDoc(shopQuery, {
-      isShopVerified: false,
-      status: "Rejected"
+      status: "rejected"
     }, { merge: true }
     ).then(() => {
       setDoc(shopsQuery, {
-        isShopVerified: false,
-        status: "Rejected"
+        status: "rejected"
       }, { merge: true }
-      )
+      ).then(async () => {
+        setDoc(notifQuery, {
+          status: "rejected",
+          shopID: shopID,
+          ownerID: ownerID,
+        })
+      })
     })
-
   }
 
   const handleView = (ownerID, shopID) => {
@@ -298,8 +301,8 @@ export default function Shops() {
                               </> :
                               <>
                                 <Button variant='contained' color="info" onClick={() => handleView(data.userID, id)} sx={{ width: 100, fontWeight: 'bold' }}>View</Button>
-                                <Button variant='contained' color="success" onClick={() => handleVerify(data.userID, id)} sx={{ marginLeft: 1, width: 100, fontWeight: 'bold' }}>Verify</Button>
-                                <Button variant='contained' color="error" disabled onClick={() => handleReject(data.userID, id)} sx={{ marginLeft: 1, width: 100, fontWeight: 'bold' }}>Reject</Button>
+                                <Button variant='contained' color="success" disabled={data.status === "" ? false : true} onClick={() => handleVerify(data.userID, id)} sx={{ marginLeft: 1, width: 100, fontWeight: 'bold' }}>Verify</Button>
+                                <Button variant='contained' color="error" disabled={data.status === "" ? false : true} onClick={() => handleReject(data.userID, id)} sx={{ marginLeft: 1, width: 100, fontWeight: 'bold' }}>Reject</Button>
                               </>
                             }
                           </Box>

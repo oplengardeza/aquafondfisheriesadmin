@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Typography } from "@mui/material";
+import { Backdrop, Box, CircularProgress, Typography } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { auth } from "./utils/firebase";
@@ -13,6 +13,15 @@ import MainDashboard from "./pages/dashboardRoutes/MainDashboard";
 import Users from "./pages/dashboardRoutes/Users";
 import Shops from "./pages/dashboardRoutes/Shops";
 import SingleView from "./pages/dashboardRoutes/singleViews/SingleView";
+import { grey } from "@mui/material/colors";
+
+const style = {
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+    backgroundColor: grey[200]
+  },
+}
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -34,7 +43,20 @@ function App() {
     };
   }, []);
   if (isLoading === true) {
-    return <Typography variant='h1'>LOADING...</Typography>;
+    return (
+      <Box style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100vh',
+      }}>
+        <Backdrop sx={style.backdrop} open>
+          <CircularProgress size={200} sx={{
+            color: '#FF9967'
+          }}/>
+        </Backdrop>
+      </Box>
+    )
   } else {
     return (
       <ThemeProvider theme={theme}>

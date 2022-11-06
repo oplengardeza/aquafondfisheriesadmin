@@ -1,5 +1,5 @@
-import { Typography, Box, Grid, Avatar, IconButton } from "@mui/material";
-import { doc, onSnapshot } from "firebase/firestore";
+import { Typography, Box, Grid, Avatar, IconButton, Button } from "@mui/material";
+import { doc, onSnapshot, setDoc } from "firebase/firestore";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { db } from "../../../utils/firebase";
@@ -19,6 +19,48 @@ function ShopSingleView({ data, shopID, ownerID }) {
 
     const onBack = () => {
         navigate("/admin/users-info")
+    }
+
+    const handleVerify = async () => {
+        const shopQuery = doc(db, "users", ownerID, "shop", shopID);
+        const notifQuery = doc(db, "notifications", shopID);
+        await setDoc(shopQuery, {
+            isShopVerified: true,
+            status: "verified"
+        }, { merge: true }
+        ).then(async () => {
+            const shopsQuery = doc(db, "shops", shopID);
+            await setDoc(shopsQuery, {
+                isShopVerified: true,
+                status: "verified"
+            }, { merge: true }
+            ).then(async() => {
+                await setDoc(notifQuery, {
+                    status: "verified"
+                }, { merge: true })
+            })
+        })
+    }
+
+    const handleReject = async () => {
+        const shopQuery = doc(db, "users", ownerID, "shop", shopID);
+        const shopsQuery = doc(db, "shops", shopID);
+        const notifQuery = doc(db, "notifications", shopID);
+        await setDoc(shopQuery, {
+            status: "rejected"
+        }, { merge: true }
+        ).then(() => {
+            setDoc(shopsQuery, {
+                status: "rejected"
+            }, { merge: true }
+            ).then(async () => {
+                setDoc(notifQuery, {
+                    status: "rejected",
+                    shopID: shopID,
+                    ownerID: ownerID,
+                })
+            })
+        })
     }
 
     return (
@@ -139,7 +181,7 @@ function ShopSingleView({ data, shopID, ownerID }) {
                                     fontWeight: 'bold',
                                     letterSpacing: 1
                                 }}>
-                                    {shopData.address}
+                                    {shopData.shopLocation}
                                 </Typography>
                             </Box>
                         </Box>
@@ -169,7 +211,7 @@ function ShopSingleView({ data, shopID, ownerID }) {
                                     fontWeight: 'bold',
                                     letterSpacing: 1
                                 }}>
-                                    Shop Contact
+                                    Owner Contact
                                 </Typography>
                                 <Typography sx={{
                                     fontSize: 18,
@@ -190,14 +232,19 @@ function ShopSingleView({ data, shopID, ownerID }) {
                                     fontWeight: 'bold',
                                     letterSpacing: 1
                                 }}>
-                                    Seller Contact
+                                    Id type
                                 </Typography>
                                 <Typography sx={{
                                     fontSize: 18,
                                     fontWeight: 'bold',
                                     letterSpacing: 1
                                 }}>
-                                    {shopData.phone}
+                                    <span style={{
+                                    fontSize: 18,
+                                    fontWeight: 'bold',
+                                    letterSpacing: 1,
+                                    color: "green"
+                                }}>{shopData.typeofID}</span>
                                 </Typography>
                             </Box>
                             <Box>
@@ -218,6 +265,21 @@ function ShopSingleView({ data, shopID, ownerID }) {
                                 </Typography>
                             </Box>
                         </Box>
+                        <Box container component={Grid} justifyContent="center" sx={{
+                            marginTop: 3
+                        }}>
+                            <Avatar sx={{ height: 300, width: 250 }} variant="square" src={shopData.idImage} />
+                        </Box>
+                        {
+                            shopData.isShopVerified === false ? 
+                            <Box container component={Grid} justifyContent="center" sx={{
+                                marginTop: 2,
+                                flexDirection: 'row'
+                            }}>
+                                <Button variant='contained' color="success" disabled={shopData.status === "" ? false : true} onClick={handleVerify} sx={{ width: 100, fontWeight: 'bold', marginRight: 2 }}>Verify</Button>
+                                <Button variant='contained' color="error" disabled={shopData.status === "" ? false : true} onClick={handleReject} sx={{ width: 100, fontWeight: 'bold', marginLeft: 2 }}>Reject</Button>
+                            </Box> : ""
+                        }
                     </Box>
                 </Box>
             </Box>
