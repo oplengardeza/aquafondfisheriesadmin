@@ -1,11 +1,11 @@
-import { Typography, Box, Grid, Avatar, IconButton, Button } from "@mui/material";
+import { Typography, Box, Grid, Avatar, IconButton, Button, Divider } from "@mui/material";
 import { doc, onSnapshot, setDoc } from "firebase/firestore";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { db } from "../../../utils/firebase";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from "react-router-dom";
-
+import { deepOrange } from "@mui/material/colors";
 function ShopSingleView({ data, shopID, ownerID }) {
     const navigate = useNavigate()
     const [shopData, setShopData] = useState({});
@@ -34,7 +34,7 @@ function ShopSingleView({ data, shopID, ownerID }) {
                 isShopVerified: true,
                 status: "verified"
             }, { merge: true }
-            ).then(async() => {
+            ).then(async () => {
                 await setDoc(notifQuery, {
                     status: "verified"
                 }, { merge: true })
@@ -64,17 +64,17 @@ function ShopSingleView({ data, shopID, ownerID }) {
     }
 
     return (
-        <Box>
+        <Box sx={{ display: "flex" }}>
             <IconButton sx={{ alignSelf: 'flex-start' }} onClick={onBack}>
                 <ArrowBackIcon sx={{ fontSize: 40 }} />
             </IconButton>
             <Box sx={{
-                padding: 5
+                padding: 5,
+                display: 'flex', flexDirection: 'row'
             }}
                 container component={Grid} justifyContent="center"
             >
-                <Box sx={{ display: 'flex', flexDirection: 'column', maxWidth: 600 }}>
-
+                <Box container component={Grid} justifyContent="center" sx={{ display: 'flex', flexDirection: 'column' }}>
                     <Box container component={Grid} justifyContent="center">
                         <Typography sx={{
                             fontSize: 40,
@@ -85,7 +85,7 @@ function ShopSingleView({ data, shopID, ownerID }) {
                     <Box container component={Grid} justifyContent="center" sx={{
                         marginTop: 3
                     }}>
-                        <Avatar sx={{ height: 300, width: 250 }} variant="square" src={shopData.imageShop} />
+                        <Avatar sx={{ height: 300, width: 600 }} variant="square" src={shopData.imageShop} />
                     </Box>
                     <Box container component={Grid} justifyContent="center" sx={{
                         marginTop: 2
@@ -98,6 +98,9 @@ function ShopSingleView({ data, shopID, ownerID }) {
                             {shopData.businessName}
                         </Typography>
                     </Box>
+                    <Divider sx={{ border: 1, borderColor: "#000", marginTop: 2 }} orientation='horizontal' />
+                </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column', maxWidth: 600, paddingRight: 5 }}>
                     <Box container component={Grid} justifyContent="space-between" sx={{
                         marginTop: 3,
                         width: 500,
@@ -240,11 +243,11 @@ function ShopSingleView({ data, shopID, ownerID }) {
                                     letterSpacing: 1
                                 }}>
                                     <span style={{
-                                    fontSize: 18,
-                                    fontWeight: 'bold',
-                                    letterSpacing: 1,
-                                    color: "green"
-                                }}>{shopData.typeofID}</span>
+                                        fontSize: 18,
+                                        fontWeight: 'bold',
+                                        letterSpacing: 1,
+                                        color: "green"
+                                    }}>{shopData.typeofID}</span>
                                 </Typography>
                             </Box>
                             <Box>
@@ -271,19 +274,62 @@ function ShopSingleView({ data, shopID, ownerID }) {
                             <Avatar sx={{ height: 300, width: 250 }} variant="square" src={shopData.idImage} />
                         </Box>
                         {
-                            shopData.isShopVerified === false ? 
-                            <Box container component={Grid} justifyContent="center" sx={{
-                                marginTop: 2,
-                                flexDirection: 'row'
-                            }}>
-                                <Button variant='contained' color="success" disabled={shopData.status === "" ? false : true} onClick={handleVerify} sx={{ width: 100, fontWeight: 'bold', marginRight: 2 }}>Verify</Button>
-                                <Button variant='contained' color="error" disabled={shopData.status === "" ? false : true} onClick={handleReject} sx={{ width: 100, fontWeight: 'bold', marginLeft: 2 }}>Reject</Button>
-                            </Box> : ""
+                            shopData.isShopVerified === false ?
+                                <Box container component={Grid} justifyContent="center" sx={{
+                                    marginTop: 2,
+                                    flexDirection: 'row'
+                                }}>
+                                    <Button variant='contained' color="success" disabled={shopData.status === "" ? false : true} onClick={handleVerify} sx={{ width: 100, fontWeight: 'bold', marginRight: 2 }}>Verify</Button>
+                                    <Button variant='contained' color="error" disabled={shopData.status === "" ? false : true} onClick={handleReject} sx={{ width: 100, fontWeight: 'bold', marginLeft: 2 }}>Reject</Button>
+                                </Box> : ""
                         }
                     </Box>
                 </Box>
+                <Divider sx={{ border: 1, borderColor: "#000", marginTop: 2 }} />
+                <Box container component={Grid} justifyContent="space-between" sx={{
+                    marginTop: 3,
+                    width: 600,
+                    paddingLeft: 5
+                }}>
+                    <Box>
+                        <Typography sx={{
+                            fontSize: 18,
+                            fontWeight: 'bold',
+                            letterSpacing: 1
+                        }}>
+                            Gcash Name
+                        </Typography>
+                        <Typography sx={{
+                            fontSize: 18,
+                            fontWeight: 'bold',
+                            letterSpacing: 1
+                        }}>
+                            {shopData.fullName}
+                        </Typography>
+                    </Box>
+                    <Box>
+                        <Typography sx={{
+                            fontSize: 18,
+                            fontWeight: 'bold',
+                            letterSpacing: 1
+                        }}>
+                            Account Number
+                        </Typography>
+                        <Typography sx={{
+                            fontSize: 18,
+                            fontWeight: 'bold',
+                            letterSpacing: 1,
+                            color: data.hasShop === true ? 'green' : 'red'
+                        }}>
+                            {shopData.contactNo}
+                        </Typography>
+                    </Box>
+                    <Box container component={Grid} justifyContent="center">
+                        <Avatar sx={{ bgcolor: deepOrange[500], height: 400, width: 350, fontSize: 40, fontWeight: 'bold', boxShadow: 2, marginTop: 2 }} variant='rounded' />
+                    </Box>
+                </Box>
             </Box>
-        </Box>
+        </Box >
     );
 }
 

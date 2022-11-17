@@ -1,4 +1,4 @@
-import { Typography, Box, Grid, Avatar, IconButton } from "@mui/material";
+import { Typography, Box, Grid, Avatar, IconButton, Divider } from "@mui/material";
 import React from "react";
 import { deepOrange } from "@mui/material/colors";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -110,6 +110,48 @@ function SingleView({ data }) {
                 {data.hasShop === true ? 'Yes' : 'No'}
               </Typography>
             </Box>
+          </Box>
+          <Divider sx={{ border: 1, borderColor: "#000", marginTop: 2 }} />
+          <Box container component={Grid} justifyContent="space-between" sx={{
+            marginTop: 3,
+            width: 500
+          }}>
+            <Box>
+              <Typography sx={{
+                fontSize: 18,
+                fontWeight: 'bold',
+                letterSpacing: 1
+              }}>
+                Gcash Name
+              </Typography>
+              <Typography sx={{
+                fontSize: 18,
+                fontWeight: 'bold',
+                letterSpacing: 1
+              }}>
+                {data.fullname}
+              </Typography>
+            </Box>
+            <Box>
+              <Typography sx={{
+                fontSize: 18,
+                fontWeight: 'bold',
+                letterSpacing: 1
+              }}>
+                Account Number
+              </Typography>
+              <Typography sx={{
+                fontSize: 18,
+                fontWeight: 'bold',
+                letterSpacing: 1,
+                color: data.hasShop === true ? 'green' : 'red'
+              }}>
+                {data.phone}
+              </Typography>
+            </Box>
+          </Box>
+          <Box container component={Grid} justifyContent="center">
+            <Avatar sx={{ bgcolor: deepOrange[500], height: 400, width: 350, fontSize: 40, fontWeight: 'bold', boxShadow: 2, marginTop: 2 }} variant='rounded' />
           </Box>
         </Box>
       </Box>
