@@ -94,6 +94,7 @@ export default function Users() {
   const navigate = useNavigate();
   const [page, setPage] = React.useState(0);
   const [userData, setData] = React.useState([]);
+  const [walletData, setWalletData] = React.useState({})
   const [selectedData, setSelectedData] = React.useState({});
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -123,6 +124,7 @@ export default function Users() {
           email: doc.data().email,
           address: doc.data().address,
           phone: doc.data().phone,
+          walletID: doc.data().walletID,
           hasShop: doc.data().hasShop === true ? "Yes" : "No",
         });
       });
@@ -133,12 +135,14 @@ export default function Users() {
     return unsubscribe;
   }, [navigate]);
 
-  const handleEvent = (userId) => {
+  const handleEvent = (userId, walletID) => {
     setIsClicked(true);
-    const unsub = onSnapshot(doc(db, "users", userId), (doc) => {
+    onSnapshot(doc(db, "users", userId), (doc) => {
       setSelectedData(doc.data());
     })
-    return unsub;
+    onSnapshot(doc(db, "users", userId, "wallets", walletID), (docs) => {
+      setWalletData(docs.data());
+    })
   };
   return (
     <Box sx={{
@@ -152,7 +156,7 @@ export default function Users() {
         : <>
           {isClicked === true ?
             <Box sx={{ boxShadow: 2, border: 2 }}>
-              <SingleView data={selectedData} />
+              <SingleView data={selectedData} walletData={walletData}/>
             </Box>
             : <>
               <TableContainer
@@ -196,7 +200,7 @@ export default function Users() {
                       )
                       : userData
                     ).map((row) => (
-                      <TableRow key={row.id} onClick={() => handleEvent(row.accountID)} sx={{
+                      <TableRow key={row.id} onClick={() => handleEvent(row.accountID, row.walletID)} sx={{
                         transition: 'all ease 200ms',
                         '&:hover': {
                           transform: 'scale(1.01)',

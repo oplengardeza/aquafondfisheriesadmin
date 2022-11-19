@@ -64,13 +64,14 @@ function ShopSingleView({ data, shopID, ownerID }) {
     }
 
     return (
-        <Box sx={{ display: "flex" }}>
+        <Box>
             <IconButton sx={{ alignSelf: 'flex-start' }} onClick={onBack}>
                 <ArrowBackIcon sx={{ fontSize: 40 }} />
             </IconButton>
             <Box sx={{
                 padding: 5,
-                display: 'flex', flexDirection: 'row'
+                display: 'flex',
+                flexDirection: 'row'
             }}
                 container component={Grid} justifyContent="center"
             >
@@ -100,7 +101,7 @@ function ShopSingleView({ data, shopID, ownerID }) {
                     </Box>
                     <Divider sx={{ border: 1, borderColor: "#000", marginTop: 2 }} orientation='horizontal' />
                 </Box>
-                <Box sx={{ display: 'flex', flexDirection: 'column', maxWidth: 600, paddingRight: 5 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', maxWidth: 400, paddingRight: 5 }}>
                     <Box container component={Grid} justifyContent="space-between" sx={{
                         marginTop: 3,
                         width: 500,
@@ -285,7 +286,17 @@ function ShopSingleView({ data, shopID, ownerID }) {
                         }
                     </Box>
                 </Box>
-                <Divider sx={{ border: 1, borderColor: "#000", marginTop: 2 }} />
+            </Box>
+            {/* <Box  sx={{
+                padding:5
+            }}>
+            <Divider sx={{ border: 1, borderColor: "#000", marginTop: 2 }} />
+            </Box>
+            <Box sx={{
+                padding:5
+            }}
+            container component={Grid} justifyContent="center"
+            >
                 <Box container component={Grid} justifyContent="space-between" sx={{
                     marginTop: 3,
                     width: 600,
@@ -328,7 +339,7 @@ function ShopSingleView({ data, shopID, ownerID }) {
                         <Avatar sx={{ bgcolor: deepOrange[500], height: 400, width: 350, fontSize: 40, fontWeight: 'bold', boxShadow: 2, marginTop: 2 }} variant='rounded' />
                     </Box>
                 </Box>
-            </Box>
+            </Box> */}
         </Box >
     );
 }

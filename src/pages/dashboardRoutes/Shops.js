@@ -187,7 +187,7 @@ export default function Shops() {
     setOwnerIDSET(ownerID)
   }
 
-  //Wag niyo muna to pipindutin 
+  //Wag pipindutin 
   const handleDelete = (ownerID, shopID) => {
     deleteDoc(doc(db, "users", ownerID, "shop", shopID)).then(async () => {
       const userQuery = doc(db, "users", ownerID);

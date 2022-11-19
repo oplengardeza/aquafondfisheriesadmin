@@ -1,8 +1,10 @@
 import { Typography, Box, Grid, Avatar, IconButton, Divider } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { deepOrange } from "@mui/material/colors";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-function SingleView({ data }) {
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "../../../utils/firebase";
+function SingleView({ data, walletData }) {
 
   const onBack = () => {
     window.location.reload()
@@ -111,48 +113,54 @@ function SingleView({ data }) {
               </Typography>
             </Box>
           </Box>
-          <Divider sx={{ border: 1, borderColor: "#000", marginTop: 2 }} />
-          <Box container component={Grid} justifyContent="space-between" sx={{
-            marginTop: 3,
-            width: 500
-          }}>
-            <Box>
-              <Typography sx={{
-                fontSize: 18,
-                fontWeight: 'bold',
-                letterSpacing: 1
-              }}>
-                Gcash Name
-              </Typography>
-              <Typography sx={{
-                fontSize: 18,
-                fontWeight: 'bold',
-                letterSpacing: 1
-              }}>
-                {data.fullname}
-              </Typography>
-            </Box>
-            <Box>
-              <Typography sx={{
-                fontSize: 18,
-                fontWeight: 'bold',
-                letterSpacing: 1
-              }}>
-                Account Number
-              </Typography>
-              <Typography sx={{
-                fontSize: 18,
-                fontWeight: 'bold',
-                letterSpacing: 1,
-                color: data.hasShop === true ? 'green' : 'red'
-              }}>
-                {data.phone}
-              </Typography>
-            </Box>
-          </Box>
-          <Box container component={Grid} justifyContent="center">
-            <Avatar sx={{ bgcolor: deepOrange[500], height: 400, width: 350, fontSize: 40, fontWeight: 'bold', boxShadow: 2, marginTop: 2 }} variant='rounded' />
-          </Box>
+          {
+            walletData === "" ?
+              "" :
+              <>
+                <Divider sx={{ border: 1, borderColor: "#000", marginTop: 2 }} />
+                <Box container component={Grid} justifyContent="space-between" sx={{
+                  marginTop: 3,
+                  width: 500
+                }}>
+                  <Box>
+                    <Typography sx={{
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                      letterSpacing: 1
+                    }}>
+                      Gcash Name
+                    </Typography>
+                    <Typography sx={{
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                      letterSpacing: 1
+                    }}>
+                      {walletData.accName}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography sx={{
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                      letterSpacing: 1
+                    }}>
+                      Account Number
+                    </Typography>
+                    <Typography sx={{
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                      letterSpacing: 1,
+                      color: data.hasShop === true ? 'green' : 'red'
+                    }}>
+                      {walletData.accNumber}
+                    </Typography>
+                  </Box>
+                </Box>
+                <Box container component={Grid} justifyContent="center">
+                  <Avatar sx={{ bgcolor: deepOrange[500], height: 400, width: 350, fontSize: 40, fontWeight: 'bold', boxShadow: 2, marginTop: 2 }} variant='rounded' src={walletData.qrCode}/>
+                </Box>
+              </>
+          }
         </Box>
       </Box>
     </Box>
