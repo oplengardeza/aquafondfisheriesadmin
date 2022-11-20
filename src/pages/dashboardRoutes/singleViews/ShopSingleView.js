@@ -6,7 +6,7 @@ import { db } from "../../../utils/firebase";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from "react-router-dom";
 import { deepOrange } from "@mui/material/colors";
-function ShopSingleView({ data, shopID, ownerID }) {
+function ShopSingleView({ data, shopID, ownerID, walletData }) {
     const navigate = useNavigate()
     const [shopData, setShopData] = useState({});
 
@@ -287,59 +287,65 @@ function ShopSingleView({ data, shopID, ownerID }) {
                     </Box>
                 </Box>
             </Box>
-            {/* <Box  sx={{
-                padding:5
-            }}>
-            <Divider sx={{ border: 1, borderColor: "#000", marginTop: 2 }} />
-            </Box>
-            <Box sx={{
-                padding:5
-            }}
-            container component={Grid} justifyContent="center"
-            >
-                <Box container component={Grid} justifyContent="space-between" sx={{
-                    marginTop: 3,
-                    width: 600,
-                    paddingLeft: 5
-                }}>
-                    <Box>
-                        <Typography sx={{
-                            fontSize: 18,
-                            fontWeight: 'bold',
-                            letterSpacing: 1
+            {
+                walletData.length === 0 ?
+                    "" :
+                    <>
+                        <Box sx={{
+                            padding: 5
                         }}>
-                            Gcash Name
-                        </Typography>
-                        <Typography sx={{
-                            fontSize: 18,
-                            fontWeight: 'bold',
-                            letterSpacing: 1
-                        }}>
-                            {shopData.fullName}
-                        </Typography>
-                    </Box>
-                    <Box>
-                        <Typography sx={{
-                            fontSize: 18,
-                            fontWeight: 'bold',
-                            letterSpacing: 1
-                        }}>
-                            Account Number
-                        </Typography>
-                        <Typography sx={{
-                            fontSize: 18,
-                            fontWeight: 'bold',
-                            letterSpacing: 1,
-                            color: data.hasShop === true ? 'green' : 'red'
-                        }}>
-                            {shopData.contactNo}
-                        </Typography>
-                    </Box>
-                    <Box container component={Grid} justifyContent="center">
-                        <Avatar sx={{ bgcolor: deepOrange[500], height: 400, width: 350, fontSize: 40, fontWeight: 'bold', boxShadow: 2, marginTop: 2 }} variant='rounded' />
-                    </Box>
-                </Box>
-            </Box> */}
+                            <Divider sx={{ border: 1, borderColor: "#000", marginTop: 2 }} />
+                        </Box>
+                        <Box sx={{
+                            padding: 5
+                        }}
+                            container component={Grid} justifyContent="center"
+                        >
+                            <Box container component={Grid} justifyContent="space-between" sx={{
+                                marginTop: 3,
+                                width: 600,
+                                paddingLeft: 5
+                            }}>
+                                <Box>
+                                    <Typography sx={{
+                                        fontSize: 18,
+                                        fontWeight: 'bold',
+                                        letterSpacing: 1
+                                    }}>
+                                        Gcash Name
+                                    </Typography>
+                                    <Typography sx={{
+                                        fontSize: 18,
+                                        fontWeight: 'bold',
+                                        letterSpacing: 1
+                                    }}>
+                                        {walletData[0].data.accName}
+                                    </Typography>
+                                </Box>
+                                <Box>
+                                    <Typography sx={{
+                                        fontSize: 18,
+                                        fontWeight: 'bold',
+                                        letterSpacing: 1
+                                    }}>
+                                        Account Number
+                                    </Typography>
+                                    <Typography sx={{
+                                        fontSize: 18,
+                                        fontWeight: 'bold',
+                                        letterSpacing: 1,
+                                        color: data.hasShop === true ? 'green' : 'red'
+                                    }}>
+                                        {walletData[0].data.accNumber}
+                                    </Typography>
+                                </Box>
+                                <Box container component={Grid} justifyContent="center">
+                                    <Avatar src={walletData[0].data.qrCode} sx={{ bgcolor: deepOrange[500], height: 400, width: 350, fontSize: 40, fontWeight: 'bold', boxShadow: 2, marginTop: 2 }} variant='rounded' />
+                                </Box>
+                            </Box>
+                        </Box>
+                    </>
+            }
         </Box >
     );
 }

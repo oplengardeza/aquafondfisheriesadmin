@@ -10,6 +10,8 @@ function SingleView({ data, walletData }) {
     window.location.reload()
   }
 
+  console.log(walletData)
+
   return (
     <Box>
       <IconButton sx={{ alignSelf: 'flex-start' }} onClick={onBack}>
@@ -114,7 +116,7 @@ function SingleView({ data, walletData }) {
             </Box>
           </Box>
           {
-            walletData === "" ?
+            Object.keys(walletData).length === 0 ?
               "" :
               <>
                 <Divider sx={{ border: 1, borderColor: "#000", marginTop: 2 }} />

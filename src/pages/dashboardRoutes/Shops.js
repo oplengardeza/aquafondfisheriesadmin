@@ -16,7 +16,7 @@ import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 
-import { collection, deleteDoc, doc, onSnapshot, query, setDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, onSnapshot, query, setDoc } from "firebase/firestore";
 import { db } from "../../utils/firebase";
 import { Button, LinearProgress, Stack, TableHead } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -101,6 +101,7 @@ export default function Shops() {
   const [userData, setUserData] = React.useState([]);
   const [shopData, setShopData] = React.useState([]);
   const [selectedData, setSelectedData] = React.useState({});
+  const [selectedWalletData, setSelectedWalletData] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [shopIDSET, setShopIDSET] = React.useState();
   const [ownerIDSET, setOwnerIDSET] = React.useState();
@@ -183,6 +184,17 @@ export default function Shops() {
     onSnapshot(shopQuery, (doc) => {
       setSelectedData({ id: shopID, data: doc.data() });
     })
+    const q = query(collection(db, "users", ownerID, "wallets"));
+    onSnapshot(q, (querySnapshot) => {
+      const data = [];
+      querySnapshot.forEach((doc) => {
+        data.push({
+          id: doc.id,
+          data: doc.data()
+        })
+      });
+      setSelectedWalletData(data);
+    });
     setShopIDSET(shopID)
     setOwnerIDSET(ownerID)
   }
@@ -210,7 +222,7 @@ export default function Shops() {
         : <>
           {isClicked === true ?
             <Box sx={{ minHeight: "85vh", boxShadow: 2, border: 2 }}>
-              <ShopSingleView data={selectedData} shopID={shopIDSET} ownerID={ownerIDSET} />
+              <ShopSingleView data={selectedData} shopID={shopIDSET} ownerID={ownerIDSET} walletData={selectedWalletData}/>
             </Box>
             : <>
               <TableContainer
