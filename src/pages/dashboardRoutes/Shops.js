@@ -221,8 +221,8 @@ export default function Shops() {
         </Stack>
         : <>
           {isClicked === true ?
-            <Box sx={{ minHeight: "85vh", boxShadow: 2, border: 2 }}>
-              <ShopSingleView data={selectedData} shopID={shopIDSET} ownerID={ownerIDSET} walletData={selectedWalletData}/>
+            <Box sx={{ maxWidth: 900, minHeight: "85vh", boxShadow: 2, border: 2 }}>
+              <ShopSingleView data={selectedData} shopID={shopIDSET} ownerID={ownerIDSET} walletData={selectedWalletData} />
             </Box>
             : <>
               <TableContainer

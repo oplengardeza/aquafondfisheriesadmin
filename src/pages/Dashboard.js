@@ -21,6 +21,9 @@ import { signOut } from "firebase/auth";
 import { auth } from "../utils/firebase";
 import logo from "../assets/icon3.png";
 import { Helmet } from "react-helmet";
+import MenuOpenIcon from '@mui/icons-material/MenuOpen';
+import MenuIcon from '@mui/icons-material/Menu';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const drawerWidth = 250;
 const styles = {
@@ -64,12 +67,18 @@ const styles = {
   buttonStyle: { minHeight: { sm: "64px", xs: "48px" } },
   logoutIcon: { fontSize: { sm: 50, xs: 36 }, color: "#000" },
   outletContainer: {
+    padding: 3,
     flexGrow: 1,
-    p: 3,
     maxWidth: 1300
+  },
+  outletContainerMD: {
+    padding: 3,
+    flexGrow: 1,
+    maxWidth: 900
   },
 };
 function Dashboard() {
+  const matchesMD = useMediaQuery('(min-width:982px)');
   const sidebarIcon = [
     { icon: <DashboardIcon sx={styles.icons} /> },
     { icon: <AccountBoxIcon sx={styles.icons} /> },
@@ -80,15 +89,23 @@ function Dashboard() {
   const handleActive = (id) => {
     setIsActive(id);
   };
+  const [state, setState] = React.useState(false)
+  const toggleDrawer = () => {
+    setState({ ...state, state: false });
+  };
   useEffect(() => {
     if (isActive === "") {
       setIsActive("Dashboard");
+      setState(false)
     } else if (isActive === "Dashboard") {
       navigate("/admin/dashboard");
+      setState(false)
     } else if (isActive === "Users") {
       navigate("/admin/users-info");
+      setState(false)
     } else if (isActive === "Shops") {
       navigate("/admin/shop-info");
+      setState(false)
     }
   }, [isActive, navigate]);
 
@@ -102,6 +119,7 @@ function Dashboard() {
         // An error happened.
       });
   };
+
   return (
     <Box sx={styles.root}>
       <Helmet>
@@ -111,22 +129,21 @@ function Dashboard() {
       <AppBar
         position='fixed'
         sx={{
-          width: `calc(100% - ${drawerWidth}px)`,
+          width: '100%',
           background: "#FF9967",
         }}
       >
         <Toolbar variant='regular'>
+          <Button onClick={() => setState(true)}><MenuIcon sx={styles.logoutIcon} /><Typography sx={styles.labels}>OPEN</Typography></Button>
           <Box sx={{ flexGrow: 1 }} />
-          <Typography variant='h6' noWrap component='div' sx={styles.labels}>
-            Admin
-          </Typography>
+          <Button sx={styles.buttonStyle} onClick={loggedOut}>
+            <PowerSettingsNewIcon sx={styles.logoutIcon} />
+            <Typography sx={styles.labels}>Log Out</Typography>
+          </Button>
         </Toolbar>
       </AppBar>
-      <Drawer sx={styles.drawerContainer} variant='permanent' anchor='left'>
-        <Button sx={styles.buttonStyle} onClick={loggedOut}>
-          <PowerSettingsNewIcon sx={styles.logoutIcon} />
-          <Typography sx={styles.labels}>Log Out</Typography>
-        </Button>
+      <Drawer sx={styles.drawerContainer} anchor='left' open={state} onClose={toggleDrawer}>
+        <Button onClick={() => setState(false)}><MenuOpenIcon sx={styles.logoutIcon} /><Typography sx={styles.labels}>CLOSE</Typography></Button>
         <Divider />
         <List sx={{ background: "#FF9967", paddingLeft: 3 }}>
           {["Dashboard", "Shops"].map((text, index) => (
@@ -148,7 +165,7 @@ function Dashboard() {
         </List>
       </Drawer>
       <Box container justifyContent="center" component={Grid}>
-        <Box sx={styles.outletContainer}>
+        <Box sx={matchesMD ? styles.outletContainer : styles.outletContainerMD}>
           <Toolbar />
           <Outlet />
         </Box>
